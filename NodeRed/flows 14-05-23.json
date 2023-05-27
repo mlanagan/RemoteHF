@@ -1,0 +1,489 @@
+[
+    {
+        "id": "f03c9fc83f28f739",
+        "type": "tab",
+        "label": "Remote HF",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "3310bc864d566b13",
+        "type": "ui_dropdown",
+        "z": "f03c9fc83f28f739",
+        "name": "",
+        "label": "Select Antenna",
+        "tooltip": "",
+        "place": "Select option",
+        "group": "61dc9edb262e35dd",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "multiple": false,
+        "options": [
+            {
+                "label": "Disconnected",
+                "value": 0,
+                "type": "num"
+            },
+            {
+                "label": "Ant1",
+                "value": 1,
+                "type": "num"
+            },
+            {
+                "label": "Ant2",
+                "value": 2,
+                "type": "num"
+            },
+            {
+                "label": "Ant3",
+                "value": 3,
+                "type": "num"
+            },
+            {
+                "label": "Ant4",
+                "value": 4,
+                "type": "num"
+            }
+        ],
+        "payload": "",
+        "topic": "topic",
+        "topicType": "msg",
+        "className": "",
+        "x": 100,
+        "y": 240,
+        "wires": [
+            [
+                "0f547c17540d2d3c"
+            ]
+        ]
+    },
+    {
+        "id": "84d8bcc41228dc3f",
+        "type": "rpi-gpio out",
+        "z": "f03c9fc83f28f739",
+        "name": "Ant2",
+        "pin": "24",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 530,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "0f547c17540d2d3c",
+        "type": "function",
+        "z": "f03c9fc83f28f739",
+        "name": "",
+        "func": "// msg1 = ANT1\n// msg2 = ANT2\n// msg3 = ANT3\n// msg4 = ANT4 \n// msg5 = ANT_ISO - 0 - Ant input shorted to ground - 1 Ant input connected to relay bus\n\nswitch (msg.payload) {\n    case 0:\n        var msg1 = { payload: 0 };\n        var msg2 = { payload: 0 };\n        var msg3 = { payload: 0 };\n        var msg4 = { payload: 0 };\n        var msg5 = { payload: 0 };\n        break;\n    case 1:\n        var msg1 = { payload: 1 };\n        var msg2 = { payload: 0 };\n        var msg3 = { payload: 0 };\n        var msg4 = { payload: 0 };\n        var msg5 = { payload: 1 };\n        break;\n    case 2:\n        var msg1 = { payload: 0 };\n        var msg2 = { payload: 1 };\n        var msg3 = { payload: 0 };\n        var msg4 = { payload: 0 };\n        var msg5 = { payload: 1 };\n        break;\n    case 3:\n        var msg1 = { payload: 0 };\n        var msg2 = { payload: 0 };\n        var msg3 = { payload: 1 };\n        var msg4 = { payload: 0 };\n        var msg5 = { payload: 1 };\n        break;\n    case 4:\n        var msg1 = { payload: 0 };\n        var msg2 = { payload: 0 };\n        var msg3 = { payload: 0 };\n        var msg4 = { payload: 1 };\n        var msg5 = { payload: 1 };\n        break;\n    default:\n        var msg1 = { payload: 0 };\n        var msg2 = { payload: 0 };\n        var msg3 = { payload: 0 };\n        var msg4 = { payload: 0 };\n        var msg5 = { payload: 0 };\n}\nreturn [msg1, msg2, msg3, msg4, msg5];",
+        "outputs": 5,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 240,
+        "wires": [
+            [
+                "d05fa0ea8ba90696"
+            ],
+            [
+                "84d8bcc41228dc3f"
+            ],
+            [
+                "94f9000d70f4a059"
+            ],
+            [
+                "b753a5f6c4636c9e"
+            ],
+            [
+                "d1502a175f4611c2"
+            ]
+        ]
+    },
+    {
+        "id": "d05fa0ea8ba90696",
+        "type": "rpi-gpio out",
+        "z": "f03c9fc83f28f739",
+        "name": "Ant1",
+        "pin": "25",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 530,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "0af2a1b6dd769d4e",
+        "type": "ui_slider",
+        "z": "f03c9fc83f28f739",
+        "name": "",
+        "label": "Rotation Speed",
+        "tooltip": "",
+        "group": "e9ce5c6cc7d19bde",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "outs": "end",
+        "topic": "channel_1",
+        "topicType": "str",
+        "min": 0,
+        "max": "4095",
+        "step": "50",
+        "className": "",
+        "x": 100,
+        "y": 640,
+        "wires": [
+            [
+                "248a1f10f2d5bd85"
+            ]
+        ]
+    },
+    {
+        "id": "2215fa0dd8f59bd9",
+        "type": "ui_gauge",
+        "z": "f03c9fc83f28f739",
+        "name": "",
+        "group": "e9ce5c6cc7d19bde",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "compass",
+        "title": "Direction",
+        "label": "Degrees",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "360",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 660,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "888e72762c14fc39",
+        "type": "ads1x15-raspi",
+        "z": "f03c9fc83f28f739",
+        "property": "payload",
+        "name": "",
+        "chip": "IC_ADS1015",
+        "i2c_address": "ADDRESS_0x48",
+        "channel": "CHANNEL_0",
+        "samplesPerSecond0": "SPS_128",
+        "samplesPerSecond1": "SPS_128",
+        "progGainAmp": "PGA_6_144V",
+        "x": 320,
+        "y": 880,
+        "wires": [
+            [
+                "39a7adba5d969f22"
+            ]
+        ]
+    },
+    {
+        "id": "8082112c86962158",
+        "type": "inject",
+        "z": "f03c9fc83f28f739",
+        "name": "Run 0.5 sec",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "0.5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 880,
+        "wires": [
+            [
+                "888e72762c14fc39"
+            ]
+        ]
+    },
+    {
+        "id": "39a7adba5d969f22",
+        "type": "function",
+        "z": "f03c9fc83f28f739",
+        "name": "Scale Voltage",
+        "func": "var newmsg = {};\n\n// Rotator outputs 2v to 4.5v corresponding to 0 to 450 degrees\n// Convert 2.5v voltage swing to degrees\n//      Remove the 2v offset\n//      Multiply 450 degrees the 2.5 volt swing = 180\n//      Use this multplier to convert to the degrees\n\nnewmsg.payload = parseInt((msg.payload.voltage-2)*180);\n\nreturn newmsg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 880,
+        "wires": [
+            [
+                "2215fa0dd8f59bd9"
+            ]
+        ]
+    },
+    {
+        "id": "248a1f10f2d5bd85",
+        "type": "ncd-mcp4728",
+        "z": "f03c9fc83f28f739",
+        "name": "",
+        "connection": "ec8477a2581ada60",
+        "addr": "96",
+        "output_all": "",
+        "vr_1": 1,
+        "pd_1": "0",
+        "gx_1": "1",
+        "eeprom_persist_1": "",
+        "eeprom_startup_1": false,
+        "eeprom_vr_1": 1,
+        "eeprom_pd_1": 0,
+        "eeprom_gx_1": 0,
+        "eeprom_dac_1": 2048,
+        "vr_2": 1,
+        "pd_2": 0,
+        "gx_2": "1",
+        "eeprom_persist_2": "",
+        "eeprom_startup_2": "",
+        "eeprom_vr_2": 1,
+        "eeprom_pd_2": 0,
+        "eeprom_gx_2": 0,
+        "eeprom_dac_2": 2048,
+        "vr_3": 1,
+        "pd_3": 0,
+        "gx_3": 0,
+        "eeprom_persist_3": "",
+        "eeprom_startup_3": "",
+        "eeprom_vr_3": 1,
+        "eeprom_pd_3": 0,
+        "eeprom_gx_3": 0,
+        "eeprom_dac_3": 2048,
+        "vr_4": 1,
+        "pd_4": 0,
+        "gx_4": 0,
+        "eeprom_persist_4": "",
+        "eeprom_startup_4": "",
+        "eeprom_vr_4": 1,
+        "eeprom_pd_4": 0,
+        "eeprom_gx_4": 0,
+        "eeprom_dac_4": 2048,
+        "x": 540,
+        "y": 640,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "20c86f9478952f29",
+        "type": "ui_template",
+        "z": "f03c9fc83f28f739",
+        "group": "e9ce5c6cc7d19bde",
+        "name": "Counter Clockwise",
+        "order": 2,
+        "width": "3",
+        "height": "1",
+        "format": "<style>\n.nr-dashboard-template {\n    padding: 0px;\n}\n</style>\n<div class=\"ccw\">\n   <md-button style=\"width:100%; height:48px; margin: 0px\"> Counter Clockwise </md-button>\n</div>\n\n<script>\n\n(function($scope) {\n    \n$('.ccw').on('touchstart mousedown', function(e) {\n    e.preventDefault(); //prevent default behavior\n    $scope.send({\"payload\": 1});\n});\n\n$('.ccw').on('touchend mouseup', function(e) {\n    e.preventDefault(); //prevent default behavior\n    $scope.send({\"payload\": 0});\n});\n    \n})(scope);\n</script>",
+        "storeOutMessages": false,
+        "fwdInMessages": false,
+        "resendOnRefresh": false,
+        "templateScope": "local",
+        "className": "",
+        "x": 110,
+        "y": 800,
+        "wires": [
+            [
+                "dec8a3d254a7c842"
+            ]
+        ]
+    },
+    {
+        "id": "158048bbd243e01f",
+        "type": "ui_template",
+        "z": "f03c9fc83f28f739",
+        "group": "e9ce5c6cc7d19bde",
+        "name": "Clockwise",
+        "order": 3,
+        "width": "3",
+        "height": "1",
+        "format": "<style>\n    .nr-dashboard-template {\n        padding: 0px;\n    }\n</style>\n<div class=\"cw\">\n    <md-button style=\"width:100%; height:48px; margin: 0px\"> Clockwise </md-button>\n</div>\n\n<script>\n    (function($scope) {\n    \n$('.cw').on('touchstart mousedown', function(e) {\n    e.preventDefault(); //prevent default behavior\n    $scope.send({\"payload\": 1});\n});\n\n$('.cw').on('touchend mouseup', function(e) {\n    e.preventDefault(); //prevent default behavior\n    $scope.send({\"payload\": 0});\n});\n    \n})(scope);\n</script>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 80,
+        "y": 720,
+        "wires": [
+            [
+                "6acf922d0abab14d"
+            ]
+        ]
+    },
+    {
+        "id": "d2864272ea193154",
+        "type": "inject",
+        "z": "f03c9fc83f28f739",
+        "name": "InitGuage",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": ".5",
+        "topic": "",
+        "payload": "0",
+        "payloadType": "num",
+        "x": 480,
+        "y": 940,
+        "wires": [
+            [
+                "2215fa0dd8f59bd9"
+            ]
+        ]
+    },
+    {
+        "id": "94f9000d70f4a059",
+        "type": "rpi-gpio out",
+        "z": "f03c9fc83f28f739",
+        "name": "Ant3",
+        "pin": "23",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 530,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "b753a5f6c4636c9e",
+        "type": "rpi-gpio out",
+        "z": "f03c9fc83f28f739",
+        "name": "Ant4",
+        "pin": "22",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 530,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "6acf922d0abab14d",
+        "type": "rpi-gpio out",
+        "z": "f03c9fc83f28f739",
+        "name": "CW",
+        "pin": "26",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 530,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "dec8a3d254a7c842",
+        "type": "rpi-gpio out",
+        "z": "f03c9fc83f28f739",
+        "name": "CCW",
+        "pin": "16",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 530,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "d1502a175f4611c2",
+        "type": "rpi-gpio out",
+        "z": "f03c9fc83f28f739",
+        "name": "ANT_ISO",
+        "pin": "27",
+        "set": true,
+        "level": "1",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 540,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "61dc9edb262e35dd",
+        "type": "ui_group",
+        "name": "Antenna",
+        "tab": "2f76998f2618d590",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "e9ce5c6cc7d19bde",
+        "type": "ui_group",
+        "name": "Rotator",
+        "tab": "2f76998f2618d590",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "ec8477a2581ada60",
+        "type": "ncd-comm",
+        "name": "rasppicomm",
+        "bus": "1",
+        "busManual": "",
+        "commType": "standard",
+        "addr": "0",
+        "useMux": false,
+        "muxAddr": "112",
+        "muxPort": "0"
+    },
+    {
+        "id": "2f76998f2618d590",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]

@@ -1,0 +1,1357 @@
+[
+    {
+        "id": "c360bc45046f0adc",
+        "type": "tab",
+        "label": "Band Activity",
+        "disabled": false,
+        "info": "",
+        "env": [
+            {
+                "name": "NRHOME",
+                "value": "/Users/Scott/.node-red",
+                "type": "str"
+            },
+            {
+                "name": "LOCATION",
+                "value": "na",
+                "type": "str"
+            },
+            {
+                "name": "PERIOD",
+                "value": "60",
+                "type": "num"
+            },
+            {
+                "name": "SCALE",
+                "value": "20",
+                "type": "num"
+            }
+        ]
+    },
+    {
+        "id": "f3cc59514d5e886f",
+        "type": "inject",
+        "z": "c360bc45046f0adc",
+        "name": "Poll Every 1m",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "8",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 400,
+        "wires": [
+            [
+                "71a2a72a66e7326a"
+            ]
+        ]
+    },
+    {
+        "id": "ea867572959f671d",
+        "type": "comment",
+        "z": "c360bc45046f0adc",
+        "name": "README",
+        "info": "Extract Band Activity from U.R.E API (https://www.ure.es)\n\nCredits:\n1) Union of Spanish Radio Amateurs (U.R.E) for providing the data and API.\n2) Eugeni (EA3QP/ED3X) for working with U.R.E to create the API and writing\n   a band activity flow that this work built upon.\n\nVersion Info:\nAK5SD   1.0 Inital Release\n\nRelease Notes:\nThere is a fle called \"band_activity.jpg\" include with this package. It must be\ninstalled to the home directory of your Node-RED installation. The background\ncolor of this image was selected to match my Node-RED color scheme. If your\nbackground color is different, you will need to change the colors in this image\nfile to match your color scheme.\n\nYou need to set the following environment variables by double-clicking on the\nBand Activity tab at the top of the Node-RED editor window to bring up the\n\"Edit flow: Band Activity\" window and then selecting the hamburger icon.\n\nNRHOME   -- Full path to home directory of your Node-RED installation\nLOCATION -- Default source continent [na, sa, eu, as, af, oc]\nPERIOD   -- Default lookback period in minutes [15, 30, 45, 60, 90, 120]\nSCALE    -- Default full-scale for heat map [0, 5, 10, 15, 20, 25, 30, 40, 50]\n\nIf SCALE is set to 0, full-scale will automatically be detemined based on the\ndata. However, if there is a lot of activity on one band-continent combination,\nthis method tends to result in only one square being highlighted. To see all\nactivity above a certain threshold, it is better to manually set SCALE. The\nbest setting depends on the lookback PERIOD, since larger PERIOD results in\nmore spots. A good starting point is SCALE = PERIOD / 3. Decrease this number\nfor greater sensitivity and increase it for reduced sensitivity. I plan to\nexplore better algorithms for automatic scaling in the future.\n\nWARC bands are not currently availble from the U.R.E API. If this data becomes\navailable in the future I will update the flow to add them.",
+        "x": 120,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "516899e681bca6a9",
+        "type": "ui_text",
+        "z": "c360bc45046f0adc",
+        "group": "aab29d23a7c61385",
+        "order": 1,
+        "width": "5",
+        "height": 1,
+        "name": "Band Activity Title",
+        "label": "<font size=\"5\">Band Activity</font>",
+        "format": "",
+        "layout": "row-spread",
+        "className": "",
+        "x": 370,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "fe88576b.186cc8",
+        "type": "change",
+        "z": "c360bc45046f0adc",
+        "name": "Image",
+        "rules": [
+            {
+                "t": "move",
+                "p": "payload",
+                "pt": "msg",
+                "to": "image",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 950,
+        "y": 260,
+        "wires": [
+            [
+                "270ba38405fc381a",
+                "e700a50d573de0bc"
+            ]
+        ]
+    },
+    {
+        "id": "724e99a2.88e2c8",
+        "type": "base64",
+        "z": "c360bc45046f0adc",
+        "name": "To Base64",
+        "action": "",
+        "property": "payload",
+        "x": 770,
+        "y": 260,
+        "wires": [
+            [
+                "fe88576b.186cc8"
+            ]
+        ]
+    },
+    {
+        "id": "fefdb62179aaad50",
+        "type": "file in",
+        "z": "c360bc45046f0adc",
+        "name": "Get Background",
+        "filename": "filename",
+        "filenameType": "msg",
+        "format": "",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 580,
+        "y": 260,
+        "wires": [
+            [
+                "724e99a2.88e2c8"
+            ]
+        ]
+    },
+    {
+        "id": "5075dd6199eab4e9",
+        "type": "http request",
+        "z": "c360bc45046f0adc",
+        "name": "HTTP Request",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 580,
+        "y": 300,
+        "wires": [
+            [
+                "7ceb4029b5f27a8d"
+            ]
+        ]
+    },
+    {
+        "id": "7f23441ed13a6435",
+        "type": "function",
+        "z": "c360bc45046f0adc",
+        "name": "Parse Band Activity",
+        "func": "// Set minimum and maximum for heat map\nlet scale = flow.get('scale') || 0\nif (scale != 0) {\n    msg.minimum = 0\n    msg.maximum = scale\n}\n\n// Parse spots and put into array for heat map\nmsg.payload = [\n    0, 0, 0, 0, 0, 0, 0, 0,\n    0,\n    Number(msg.payload.na[6]),\n    Number(msg.payload.na[10]),\n    Number(msg.payload.na[15]),\n    Number(msg.payload.na[20]),\n    Number(msg.payload.na[40]),\n    Number(msg.payload.na[80]),\n    Number(msg.payload.na[160]),\n    0,\n    Number(msg.payload.sa[6]),\n    Number(msg.payload.sa[10]),\n    Number(msg.payload.sa[15]),\n    Number(msg.payload.sa[20]),\n    Number(msg.payload.sa[40]),\n    Number(msg.payload.sa[80]),\n    Number(msg.payload.sa[160]),\n    0,\n    Number(msg.payload.eu[6]),\n    Number(msg.payload.eu[10]),\n    Number(msg.payload.eu[15]),\n    Number(msg.payload.eu[20]),\n    Number(msg.payload.eu[40]),\n    Number(msg.payload.eu[80]),\n    Number(msg.payload.eu[160]),\n    0,\n    Number(msg.payload.as[6]),\n    Number(msg.payload.as[10]),\n    Number(msg.payload.as[15]),\n    Number(msg.payload.as[20]),\n    Number(msg.payload.as[40]),\n    Number(msg.payload.as[80]),\n    Number(msg.payload.as[160]),\n    0,\n    Number(msg.payload.af[6]),\n    Number(msg.payload.af[10]),\n    Number(msg.payload.af[15]),\n    Number(msg.payload.af[20]),\n    Number(msg.payload.af[40]),\n    Number(msg.payload.af[80]),\n    Number(msg.payload.af[160]),\n    0,\n    Number(msg.payload.oc[6]),\n    Number(msg.payload.oc[10]),\n    Number(msg.payload.oc[15]),\n    Number(msg.payload.oc[20]),\n    Number(msg.payload.oc[40]),\n    Number(msg.payload.oc[80]),\n    Number(msg.payload.oc[160]),\n]\n\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1130,
+        "y": 300,
+        "wires": [
+            [
+                "270ba38405fc381a",
+                "e700a50d573de0bc"
+            ]
+        ]
+    },
+    {
+        "id": "d50136404b83c93c",
+        "type": "http request",
+        "z": "c360bc45046f0adc",
+        "name": "HTTP Request",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 580,
+        "y": 340,
+        "wires": [
+            [
+                "21c75e0ba10aa5bc"
+            ]
+        ]
+    },
+    {
+        "id": "21afe129d54afa2a",
+        "type": "http request",
+        "z": "c360bc45046f0adc",
+        "name": "HTTP Request",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 580,
+        "y": 380,
+        "wires": [
+            [
+                "490a903acab6574e"
+            ]
+        ]
+    },
+    {
+        "id": "7ceb4029b5f27a8d",
+        "type": "change",
+        "z": "c360bc45046f0adc",
+        "name": "Topic = \"na\"",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "na",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 300,
+        "wires": [
+            [
+                "5bfc4371027b7313"
+            ]
+        ]
+    },
+    {
+        "id": "21c75e0ba10aa5bc",
+        "type": "change",
+        "z": "c360bc45046f0adc",
+        "name": "Topic = \"sa\"",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "sa",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 340,
+        "wires": [
+            [
+                "5bfc4371027b7313"
+            ]
+        ]
+    },
+    {
+        "id": "490a903acab6574e",
+        "type": "change",
+        "z": "c360bc45046f0adc",
+        "name": "Topic = \"eu\"",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "eu",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 380,
+        "wires": [
+            [
+                "5bfc4371027b7313"
+            ]
+        ]
+    },
+    {
+        "id": "7312a4aa79a42aee",
+        "type": "http request",
+        "z": "c360bc45046f0adc",
+        "name": "HTTP Request",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 580,
+        "y": 420,
+        "wires": [
+            [
+                "037aacd738fdd20d"
+            ]
+        ]
+    },
+    {
+        "id": "037aacd738fdd20d",
+        "type": "change",
+        "z": "c360bc45046f0adc",
+        "name": "Topic = \"as\"",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "as",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 420,
+        "wires": [
+            [
+                "5bfc4371027b7313"
+            ]
+        ]
+    },
+    {
+        "id": "6dd749d0546249ca",
+        "type": "http request",
+        "z": "c360bc45046f0adc",
+        "name": "HTTP Request",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 580,
+        "y": 460,
+        "wires": [
+            [
+                "33f3effbf8a38371"
+            ]
+        ]
+    },
+    {
+        "id": "33f3effbf8a38371",
+        "type": "change",
+        "z": "c360bc45046f0adc",
+        "name": "Topic = \"af\"",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "af",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 460,
+        "wires": [
+            [
+                "5bfc4371027b7313"
+            ]
+        ]
+    },
+    {
+        "id": "827824c59f218535",
+        "type": "http request",
+        "z": "c360bc45046f0adc",
+        "name": "HTTP Request",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 580,
+        "y": 500,
+        "wires": [
+            [
+                "713a238126a47b94"
+            ]
+        ]
+    },
+    {
+        "id": "713a238126a47b94",
+        "type": "change",
+        "z": "c360bc45046f0adc",
+        "name": "Topic = \"oc\"",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "oc",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 500,
+        "wires": [
+            [
+                "5bfc4371027b7313"
+            ]
+        ]
+    },
+    {
+        "id": "270ba38405fc381a",
+        "type": "ui_heat_map",
+        "z": "c360bc45046f0adc",
+        "group": "aab29d23a7c61385",
+        "order": 11,
+        "width": "6",
+        "height": "7",
+        "name": "",
+        "rows": "8",
+        "columns": "7",
+        "minMax": false,
+        "minimumValue": 0,
+        "maximumValue": "",
+        "backgroundType": "image",
+        "backgroundColor": "#ff80c0",
+        "image": "never",
+        "radius": "50",
+        "opacity": "0",
+        "blur": "0.85",
+        "showValues": false,
+        "gridType": "none",
+        "valuesDecimals": 0,
+        "showLegend": false,
+        "legendType": "none",
+        "legendDecimals": 0,
+        "legendCount": "2",
+        "x": 1320,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4376cbed45049448",
+        "type": "inject",
+        "z": "c360bc45046f0adc",
+        "name": "Start-Up",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0",
+        "topic": "control",
+        "payload": "false",
+        "payloadType": "bool",
+        "x": 160,
+        "y": 140,
+        "wires": [
+            [
+                "9492af50e1df0c79",
+                "2a7d8899d5166dfc",
+                "60a5f9477040d609",
+                "8dea19ecba67d943",
+                "72b6fdc4eb1611e6"
+            ]
+        ]
+    },
+    {
+        "id": "f2874313ddfbc1b8",
+        "type": "comment",
+        "z": "c360bc45046f0adc",
+        "name": "Initialize",
+        "info": "",
+        "x": 110,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "71a2a72a66e7326a",
+        "type": "function",
+        "z": "c360bc45046f0adc",
+        "name": "Compose URL",
+        "func": "// Initialize user variables\nlet location = flow.get('location') || \"\"\nlet period   = flow.get('period')   || 0\n\n// Do some basic error checking to ensure proper calls to API\nif ((location == \"na\" || location == \"sa\" || location == \"eu\" || location == \"as\" ||\n     location == \"af\" || location == \"oc\") && period >= 0 && period <= 120) {\n    let url1 = \"https://api.ure.es/v2/rates/\" + location + \"/na/\" + period\n    let url2 = \"https://api.ure.es/v2/rates/\" + location + \"/sa/\" + period\n    let url3 = \"https://api.ure.es/v2/rates/\" + location + \"/eu/\" + period\n    let url4 = \"https://api.ure.es/v2/rates/\" + location + \"/as/\" + period\n    let url5 = \"https://api.ure.es/v2/rates/\" + location + \"/af/\" + period\n    let url6 = \"https://api.ure.es/v2/rates/\" + location + \"/oc/\" + period\n\n    return [{url: url1}, {url: url2}, {url: url3}, {url: url4}, {url: url5}, {url: url6}]\n}",
+        "outputs": 6,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 400,
+        "wires": [
+            [
+                "5075dd6199eab4e9"
+            ],
+            [
+                "d50136404b83c93c"
+            ],
+            [
+                "21afe129d54afa2a"
+            ],
+            [
+                "7312a4aa79a42aee"
+            ],
+            [
+                "6dd749d0546249ca"
+            ],
+            [
+                "827824c59f218535"
+            ]
+        ]
+    },
+    {
+        "id": "60c11f26808a9dd9",
+        "type": "ui_dropdown",
+        "z": "c360bc45046f0adc",
+        "name": "Select Scale",
+        "label": "Scale:",
+        "tooltip": "Select full-scale for heat map",
+        "place": "",
+        "group": "fddda5fe6bb72fcd",
+        "order": 6,
+        "width": "3",
+        "height": 1,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "Auto",
+                "value": 0,
+                "type": "num"
+            },
+            {
+                "label": "5",
+                "value": 5,
+                "type": "num"
+            },
+            {
+                "label": "10",
+                "value": 10,
+                "type": "num"
+            },
+            {
+                "label": "15",
+                "value": 15,
+                "type": "num"
+            },
+            {
+                "label": "20",
+                "value": 20,
+                "type": "num"
+            },
+            {
+                "label": "25",
+                "value": 25,
+                "type": "num"
+            },
+            {
+                "label": "30",
+                "value": 30,
+                "type": "num"
+            },
+            {
+                "label": "40",
+                "value": "40",
+                "type": "str"
+            },
+            {
+                "label": "50",
+                "value": "50",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "scale",
+        "topicType": "str",
+        "className": "",
+        "x": 570,
+        "y": 220,
+        "wires": [
+            [
+                "0fb1804f033dd2d1"
+            ]
+        ]
+    },
+    {
+        "id": "a0ea3bbc47a53af4",
+        "type": "ui_dropdown",
+        "z": "c360bc45046f0adc",
+        "name": "Select Location",
+        "label": "Home Continent:",
+        "tooltip": "Select home continent",
+        "place": "",
+        "group": "fddda5fe6bb72fcd",
+        "order": 4,
+        "width": "6",
+        "height": 1,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "North America",
+                "value": "na",
+                "type": "str"
+            },
+            {
+                "label": "South America",
+                "value": "sa",
+                "type": "str"
+            },
+            {
+                "label": "Europe",
+                "value": "eu",
+                "type": "str"
+            },
+            {
+                "label": "Asia",
+                "value": "as",
+                "type": "str"
+            },
+            {
+                "label": "Africa",
+                "value": "af",
+                "type": "str"
+            },
+            {
+                "label": "Oceania",
+                "value": "oc",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "location",
+        "topicType": "str",
+        "className": "",
+        "x": 580,
+        "y": 140,
+        "wires": [
+            [
+                "8477536c621a18bc"
+            ]
+        ]
+    },
+    {
+        "id": "b40d4bb6b4775bed",
+        "type": "ui_dropdown",
+        "z": "c360bc45046f0adc",
+        "name": "Select Period",
+        "label": "Time:",
+        "tooltip": "Select lookback period in minutes",
+        "place": "",
+        "group": "fddda5fe6bb72fcd",
+        "order": 5,
+        "width": "3",
+        "height": 1,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "15",
+                "value": 15,
+                "type": "num"
+            },
+            {
+                "label": "30",
+                "value": 30,
+                "type": "num"
+            },
+            {
+                "label": "45",
+                "value": 45,
+                "type": "num"
+            },
+            {
+                "label": "60",
+                "value": 60,
+                "type": "num"
+            },
+            {
+                "label": "90",
+                "value": "90",
+                "type": "str"
+            },
+            {
+                "label": "120",
+                "value": "120",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "period",
+        "topicType": "str",
+        "className": "",
+        "x": 580,
+        "y": 180,
+        "wires": [
+            [
+                "34e2c84a37bf38de"
+            ]
+        ]
+    },
+    {
+        "id": "2a7d8899d5166dfc",
+        "type": "change",
+        "z": "c360bc45046f0adc",
+        "name": "Default Period",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "PERIOD",
+                "tot": "env"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 360,
+        "y": 180,
+        "wires": [
+            [
+                "b40d4bb6b4775bed"
+            ]
+        ]
+    },
+    {
+        "id": "9492af50e1df0c79",
+        "type": "change",
+        "z": "c360bc45046f0adc",
+        "name": "Default Location",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "LOCATION",
+                "tot": "env",
+                "dc": true
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 360,
+        "y": 140,
+        "wires": [
+            [
+                "a0ea3bbc47a53af4"
+            ]
+        ]
+    },
+    {
+        "id": "60a5f9477040d609",
+        "type": "function",
+        "z": "c360bc45046f0adc",
+        "name": "Compose File",
+        "func": "const NRHOME = env.get('NRHOME') || \"\"\n\nmsg.filename = NRHOME + \"/band_activity.jpg\"\n\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 260,
+        "wires": [
+            [
+                "fefdb62179aaad50"
+            ]
+        ]
+    },
+    {
+        "id": "8dea19ecba67d943",
+        "type": "change",
+        "z": "c360bc45046f0adc",
+        "name": "Default Scale",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "SCALE",
+                "tot": "env"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 350,
+        "y": 220,
+        "wires": [
+            [
+                "60c11f26808a9dd9"
+            ]
+        ]
+    },
+    {
+        "id": "6a58c467491d0742",
+        "type": "comment",
+        "z": "c360bc45046f0adc",
+        "name": "Poll URE API",
+        "info": "",
+        "x": 130,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "8477536c621a18bc",
+        "type": "change",
+        "z": "c360bc45046f0adc",
+        "name": "Save Location",
+        "rules": [
+            {
+                "t": "set",
+                "p": "location",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 780,
+        "y": 140,
+        "wires": [
+            [
+                "651e2e10e220158e"
+            ]
+        ]
+    },
+    {
+        "id": "34e2c84a37bf38de",
+        "type": "change",
+        "z": "c360bc45046f0adc",
+        "name": "Save Period",
+        "rules": [
+            {
+                "t": "set",
+                "p": "period",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 180,
+        "wires": [
+            [
+                "651e2e10e220158e"
+            ]
+        ]
+    },
+    {
+        "id": "0fb1804f033dd2d1",
+        "type": "change",
+        "z": "c360bc45046f0adc",
+        "name": "Save Scale",
+        "rules": [
+            {
+                "t": "set",
+                "p": "scale",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 220,
+        "wires": [
+            [
+                "651e2e10e220158e"
+            ]
+        ]
+    },
+    {
+        "id": "5bfc4371027b7313",
+        "type": "join",
+        "z": "c360bc45046f0adc",
+        "name": "Join",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "6",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "num",
+        "reduceFixup": "",
+        "x": 950,
+        "y": 300,
+        "wires": [
+            [
+                "7f23441ed13a6435"
+            ]
+        ]
+    },
+    {
+        "id": "7967e1724cc180aa",
+        "type": "ui_ui_control",
+        "z": "c360bc45046f0adc",
+        "name": "Change/Group",
+        "events": "change",
+        "x": 580,
+        "y": 540,
+        "wires": [
+            [
+                "e11f70c06c60efc4"
+            ]
+        ]
+    },
+    {
+        "id": "7e49c85235935487",
+        "type": "comment",
+        "z": "c360bc45046f0adc",
+        "name": "Show/Hide Controls",
+        "info": "",
+        "x": 150,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "19f961b64b0d2ea0",
+        "type": "ui_switch",
+        "z": "c360bc45046f0adc",
+        "name": "Control Switch",
+        "label": "",
+        "tooltip": "{{tooltip}}",
+        "group": "aab29d23a7c61385",
+        "order": 2,
+        "width": 1,
+        "height": 1,
+        "passthru": false,
+        "decouple": "true",
+        "topic": "",
+        "topicType": "str",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "fa-cog fa-lg",
+        "oncolor": "#3E70AB",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "fa-cog fa-lg",
+        "offcolor": "#848484",
+        "animate": true,
+        "className": "",
+        "x": 140,
+        "y": 500,
+        "wires": [
+            [
+                "e11f70c06c60efc4"
+            ]
+        ]
+    },
+    {
+        "id": "0562254fdec801a0",
+        "type": "change",
+        "z": "c360bc45046f0adc",
+        "name": "Cntl Show/Hide ",
+        "rules": [
+            {
+                "t": "change",
+                "p": "payload",
+                "pt": "msg",
+                "from": "true",
+                "fromt": "bool",
+                "to": "{\"group\":{\"hide\":[\"AK5SD_Shack_Band_Activity\"],\"show\":[\"AK5SD_Shack_Band_Activity_Control\"]}}",
+                "tot": "json"
+            },
+            {
+                "t": "change",
+                "p": "payload",
+                "pt": "msg",
+                "from": "false",
+                "fromt": "bool",
+                "to": "{\"group\":{\"hide\":[\"AK5SD_Shack_Band_Activity_Control\"],\"show\":[\"AK5SD_Shack_Band_Activity\"]}}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 360,
+        "y": 540,
+        "wires": [
+            [
+                "7967e1724cc180aa"
+            ]
+        ]
+    },
+    {
+        "id": "e11f70c06c60efc4",
+        "type": "function",
+        "z": "c360bc45046f0adc",
+        "name": "Control Status",
+        "func": "var state = context.get(\"STATE\") === undefined ? false : context.get(\"STATE\")\n\n// Send to all browser sessions\ndelete msg.socketid\n\n// Pass through true and false from switch node,\n// otherwise set payload based on current state\nif (msg.payload !== true && msg.payload !== false) {\n    msg.payload = state\n}\ncontext.set(\"STATE\", msg.payload)\n\n// Set tooltip based on status\nif (msg.payload == true) {\n    msg.tooltip = \"Hide Band Activity controls\"\n} else {\n    msg.tooltip = \"Show Band Activity controls\"\n}\n\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 140,
+        "y": 540,
+        "wires": [
+            [
+                "19f961b64b0d2ea0",
+                "0562254fdec801a0",
+                "f24854d3dbcf9ca5",
+                "566474f4b73ded5a"
+            ]
+        ]
+    },
+    {
+        "id": "e700a50d573de0bc",
+        "type": "ui_heat_map",
+        "z": "c360bc45046f0adc",
+        "group": "fddda5fe6bb72fcd",
+        "order": 11,
+        "width": "6",
+        "height": "7",
+        "name": "",
+        "rows": "8",
+        "columns": "7",
+        "minMax": false,
+        "minimumValue": 0,
+        "maximumValue": "",
+        "backgroundType": "image",
+        "backgroundColor": "#ff80c0",
+        "image": "never",
+        "radius": "50",
+        "opacity": "0",
+        "blur": "0.85",
+        "showValues": false,
+        "gridType": "none",
+        "valuesDecimals": 0,
+        "showLegend": false,
+        "legendType": "none",
+        "legendDecimals": 0,
+        "legendCount": 2,
+        "x": 1320,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f24854d3dbcf9ca5",
+        "type": "ui_switch",
+        "z": "c360bc45046f0adc",
+        "name": "Control Switch",
+        "label": "",
+        "tooltip": "{{tooltip}}",
+        "group": "fddda5fe6bb72fcd",
+        "order": 2,
+        "width": 1,
+        "height": 1,
+        "passthru": false,
+        "decouple": "true",
+        "topic": "",
+        "topicType": "str",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "fa-cog fa-lg",
+        "oncolor": "#3E70AB",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "fa-cog fa-lg",
+        "offcolor": "#848484",
+        "animate": true,
+        "className": "",
+        "x": 140,
+        "y": 580,
+        "wires": [
+            [
+                "e11f70c06c60efc4"
+            ]
+        ]
+    },
+    {
+        "id": "08932361437c150c",
+        "type": "ui_text",
+        "z": "c360bc45046f0adc",
+        "group": "fddda5fe6bb72fcd",
+        "order": 1,
+        "width": "5",
+        "height": 1,
+        "name": "Band Activity Title",
+        "label": "<font size=\"5\">Band Activity</font>",
+        "format": "",
+        "layout": "row-spread",
+        "className": "",
+        "x": 590,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "651e2e10e220158e",
+        "type": "link out",
+        "z": "c360bc45046f0adc",
+        "name": "Band Change Controls",
+        "mode": "link",
+        "links": [
+            "b86d9dd4260a161c",
+            "b7a9457cbcbde586"
+        ],
+        "x": 915,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "a87e6599d254eb23",
+        "type": "comment",
+        "z": "c360bc45046f0adc",
+        "name": "Manual Update",
+        "info": "",
+        "x": 140,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "f913f5a64cad0937",
+        "type": "gate",
+        "z": "c360bc45046f0adc",
+        "name": "Gate",
+        "controlTopic": "control",
+        "defaultState": "open",
+        "openCmd": "true",
+        "closeCmd": "false",
+        "toggleCmd": "toggle",
+        "defaultCmd": "default",
+        "statusCmd": "status",
+        "persist": false,
+        "storeName": "default",
+        "x": 170,
+        "y": 260,
+        "wires": [
+            [
+                "71a2a72a66e7326a",
+                "60a5f9477040d609"
+            ]
+        ]
+    },
+    {
+        "id": "72b6fdc4eb1611e6",
+        "type": "trigger",
+        "z": "c360bc45046f0adc",
+        "name": "Trigger 8s",
+        "op1": "false",
+        "op2": "true",
+        "op1type": "bool",
+        "op2type": "bool",
+        "duration": "8",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "s",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 160,
+        "y": 180,
+        "wires": [
+            [
+                "f913f5a64cad0937"
+            ]
+        ]
+    },
+    {
+        "id": "a314e1ae74b8281f",
+        "type": "link out",
+        "z": "c360bc45046f0adc",
+        "name": "Band Change Group",
+        "mode": "link",
+        "links": [
+            "b7a9457cbcbde586"
+        ],
+        "x": 435,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "b7a9457cbcbde586",
+        "type": "link in",
+        "z": "c360bc45046f0adc",
+        "name": "Band Update",
+        "links": [
+            "651e2e10e220158e",
+            "d597119983213881",
+            "e789725db65ebb3a",
+            "a314e1ae74b8281f"
+        ],
+        "x": 55,
+        "y": 260,
+        "wires": [
+            [
+                "f913f5a64cad0937"
+            ]
+        ]
+    },
+    {
+        "id": "566474f4b73ded5a",
+        "type": "delay",
+        "z": "c360bc45046f0adc",
+        "name": "Delay 1s",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 340,
+        "y": 500,
+        "wires": [
+            [
+                "a314e1ae74b8281f"
+            ]
+        ]
+    },
+    {
+        "id": "aab29d23a7c61385",
+        "type": "ui_group",
+        "name": "Band Activity",
+        "tab": "27b6085e.001648",
+        "order": 4,
+        "disp": false,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "fddda5fe6bb72fcd",
+        "type": "ui_group",
+        "name": "Band Activity Control",
+        "tab": "27b6085e.001648",
+        "order": 5,
+        "disp": false,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "27b6085e.001648",
+        "type": "ui_tab",
+        "name": "AK5SD Shack",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    }
+]
