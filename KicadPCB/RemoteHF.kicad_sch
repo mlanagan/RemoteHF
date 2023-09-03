@@ -9791,7 +9791,7 @@
     (property "Reference" "R2" (at 7.493 180.213 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
-    (property "Value" "270" (at 7.62 182.499 0)
+    (property "Value" "1k" (at 7.62 182.499 0)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Footprint" "Resistor_SMD:R_0805_2012Metric" (at 14.478 181.61 90)
